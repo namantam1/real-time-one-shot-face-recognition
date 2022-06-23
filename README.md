@@ -39,7 +39,7 @@ python main.py
 # Demo of real time face recognition
 ![demo-video](https://user-images.githubusercontent.com/59503233/175144109-b207a910-87d6-44ac-8d36-b175910d2683.gif)
 
-# Refrences
+# References
 
 * [FaceNet: A Unified Embedding for Face Recognition and Clustering](https://ieeexplore.ieee.org/document/7298682) (Research Paper)
 * [Siamese Neural Networks for One-shot Image Recognition](https://www.cs.cmu.edu/~rsalakhu/papers/oneshot1.pdf) (Research Paper)
