@@ -237,10 +237,9 @@ for dir, _, files in os.walk("images"):
 
 # add_image("application_data/images/ravi sir.jpg")
 print(known_face_labels, known_face_encodings.shape)
-
-# running server
-main()
-
 # saving updated encoding on close
 if changed:
 	save_data()
+
+# running server
+main()
