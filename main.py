@@ -78,6 +78,20 @@ def face_distance(face_encodings, face_to_compare):
 
     return np.linalg.norm(face_encodings - face_to_compare, axis=1)
 
+metrix = "cosine"
+threshold = 0.07
+def face_distance(encodings, encoding):
+    if len(encodings) == 0:
+        return np.empty(0)
+
+    if metrix == "euclidean":
+        return np.linalg.norm(encodings - encoding, axis=1)
+    else:
+        a1 = np.sum(np.multiply(encodings, encoding), axis=1)
+        b1 = np.sum(np.multiply(encodings, encodings), axis=1)
+        c1 = np.sum(np.multiply([encoding], [encoding]), axis=1)
+        return (1 - (a1 / (b1**.5 * c1**.5)))
+
 def _raw_face_landmarks(face_image, face_locations=None):
 	if face_locations is None:
 		face_locations = get_face_detector()(face_image, 1)
@@ -130,23 +144,23 @@ def main():
 	import cv2
 	from urllib import request
 
-	# Get a reference to webcam #0 (the default one)
-	video_capture = cv2.VideoCapture(0)
-
     # uncomment below code to connect to remote camera
-	# class video_capture:
-	# 	""" Class to connect to remote camera """
-	# 	url = "http://192.168.137.155:8080/shot.jpg"
-	# 	@staticmethod
-	# 	def read():
-	# 		imgResp = request.urlopen(__class__.url)
-	# 		imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
-	# 		img = cv2.imdecode(imgNp, -1)
-	# 		# img = cv2.resize(img, (640, 480)) # use this if size recieve is very large
-	# 		return None, img
-	# 	@staticmethod
-	# 	def release():
-	# 		pass
+	class video_capture:
+		""" Class to connect to remote camera """
+		url = "http://192.168.137.155:8080/shot.jpg"
+		@staticmethod
+		def read():
+			imgResp = request.urlopen(__class__.url)
+			imgNp = np.array(bytearray(imgResp.read()), dtype=np.uint8)
+			img = cv2.imdecode(imgNp, -1)
+			# img = cv2.resize(img, (640, 480)) # use this if size recieve is very large
+			return None, img
+		@staticmethod
+		def release():
+			pass
+
+	# Get a reference to webcam #0 (the default one)
+	# video_capture = cv2.VideoCapture(0)
 
 	# Initialize some variables
 	face_locations = []
@@ -160,8 +174,10 @@ def main():
 
 		# Only process every other frame of video to save time
 		if process_this_frame:
+			times = 0.5
 			# Resize frame of video to 1/4 size for faster face recognition processing
-			small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+			small_frame = cv2.resize(frame, (0, 0), fx=times, fy=times)
+			# small_frame = frame.copy()
 
 			# Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
 			rgb_small_frame = small_frame[:, :, ::-1]
@@ -172,17 +188,14 @@ def main():
 
 			face_names = []
 			for face_encoding in face_encodings:
-				# See if the face is a match for the known face(s)
-				name = "Unknown"
 				# Or instead, use the known face with the smallest distance to the new face
 				face_distances = face_distance(known_face_encodings, face_encoding)
 				best_match_index = np.argmin(face_distances)
 				# if matches[best_match_index]:
-				if face_distances[best_match_index] < 0.6:
-					name = "{},{:,.1f}%".format(
-                        known_face_labels[best_match_index],
-                        100-face_distances[best_match_index]*100
-                    ).capitalize()
+				if face_distances[best_match_index] < threshold:
+					name = known_face_labels[best_match_index]
+				else:
+					name = "Unknown"
 
 				face_names.append(name)
 
@@ -192,10 +205,11 @@ def main():
 		# Display the results
 		for (top, right, bottom, left), name in zip(face_locations, face_names):
 			# Scale back up face locations since the frame we detected in was scaled to 1/4 size
-			top *= 4
-			right *= 4
-			bottom *= 4
-			left *= 4
+			if times != 1:
+				top = int(top * (1/times))
+				right = int(right * (1/times))
+				bottom = int(bottom * (1/times))
+				left = int(left * (1/times))
 
 			# Draw a box around the face
 			cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
