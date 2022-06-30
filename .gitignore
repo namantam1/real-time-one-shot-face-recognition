@@ -1,3 +1,6 @@
 images/*
 !images/naman.jpg
 encodings/*.npz
+**/__pycache__
+*.pyc
+data.csv

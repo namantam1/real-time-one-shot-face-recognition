@@ -3,7 +3,10 @@ import numpy as np
 from PIL import Image
 import dlib
 
-file_name = "encodings/database.npz"
+
+BASE = "C:/Users/Naman Tamrakar/Desktop/ML-CCPD/real-time-one-shot-face-recognition/"
+
+file_name = BASE + "encodings/database.npz"
 changed = False
 print(f"Database file: {file_name}")
 
@@ -16,11 +19,12 @@ print(f"Metrix funtion is {metrix} and threshold {threshold}")
 face_detector = dlib.get_frontal_face_detector()
 print("Face detector model loded...")
 
-predictor_model = "models/shape_predictor_5_face_landmarks.dat"
+
+predictor_model = BASE + "models/shape_predictor_5_face_landmarks.dat"
 pose_predictor = dlib.shape_predictor(predictor_model)
 print("Face landmarks model loded...")
 
-face_recognition_model = "models/dlib_face_recognition_resnet_model_v1.dat"
+face_recognition_model = BASE + "models/dlib_face_recognition_resnet_model_v1.dat"
 face_encoder = dlib.face_recognition_model_v1(face_recognition_model)
 print("Face recognition model loded...")
 

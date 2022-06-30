@@ -7,12 +7,13 @@ if len(argv) == 1:
     exit(1)
 
 
+# VIDEO_PATH = "C:\\Users\\Naman Tamrakar\\Videos\\28.01.2022_15.36.07_REC.mp4"
 VIDEO_PATH = argv[1]
 
 from functions import *
 
 rotate = False
-skip_frames = 0 # i.e. at 30 fps, this advances one second
+skip_frames = 10 # i.e. at 30 fps, this advances one second
 
 video_capture = cv2.VideoCapture(VIDEO_PATH)
 
@@ -22,7 +23,7 @@ video_width  = video_capture.get(cv2.CAP_PROP_FRAME_WIDTH)
 video_height = video_capture.get(cv2.CAP_PROP_FRAME_HEIGHT)
 video_fps    = video_capture.get(cv2.CAP_PROP_FPS)
 print(f"Total frames: {video_frames}, height: {video_height}, width: {video_width}, "
-	f"FPS: {video_fps}")
+	f"FPS: {video_fps}, Skipping frames: {skip_frames}")
 
 
 # Initialize some variables
@@ -46,13 +47,14 @@ while True:
 	if not success or current_frame_count >= video_frames:
 		break
 
-	times = 0.5
+	times = 0.25
 	# Resize frame of video to 1/4 size for faster face recognition processing
 	small_frame = cv2.resize(frame, (0, 0), fx=times, fy=times)
 	# small_frame = frame.copy()
 
 	# Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
 	rgb_small_frame = small_frame[:, :, ::-1]
+	# print(rgb_small_frame.shape)
 	
 	# Find all the faces and face encodings in the current frame of video
 	face_locations = get_face_locations(rgb_small_frame)
