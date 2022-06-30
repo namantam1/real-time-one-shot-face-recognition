@@ -4,16 +4,17 @@ from PIL import Image
 import dlib
 
 
-BASE = "C:/Users/Naman Tamrakar/Desktop/ML-CCPD/real-time-one-shot-face-recognition/"
+# BASE = "C:/Users/Naman Tamrakar/Desktop/ML-CCPD/real-time-one-shot-face-recognition/"
+BASE = ""
 
 file_name = BASE + "encodings/database.npz"
 changed = False
 print(f"Database file: {file_name}")
 
-metrix = "cosine"
-threshold = 0.06
-# metrix = "euclidean"
-# threshold = 0.6
+# metrix = "cosine"
+# threshold = 0.06
+metrix = "euclidean"
+threshold = 0.5
 print(f"Metrix funtion is {metrix} and threshold {threshold}")
 
 face_detector = dlib.get_frontal_face_detector()

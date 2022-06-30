@@ -13,7 +13,7 @@ VIDEO_PATH = argv[1]
 from functions import *
 
 rotate = False
-skip_frames = 10 # i.e. at 30 fps, this advances one second
+skip_frames = 20 # i.e. at 30 fps, this advances one second
 
 video_capture = cv2.VideoCapture(VIDEO_PATH)
 
@@ -47,7 +47,7 @@ while True:
 	if not success or current_frame_count >= video_frames:
 		break
 
-	times = 0.25
+	times = 0.8
 	# Resize frame of video to 1/4 size for faster face recognition processing
 	small_frame = cv2.resize(frame, (0, 0), fx=times, fy=times)
 	# small_frame = frame.copy()
@@ -59,7 +59,7 @@ while True:
 	# Find all the faces and face encodings in the current frame of video
 	face_locations = get_face_locations(rgb_small_frame)
 	face_encodings = get_face_encodings(rgb_small_frame, face_locations)
-
+	# print(len(face_encodings))
 	face_names = []
 	for face_encoding in face_encodings:
 		# Or instead, use the known face with the smallest distance to the new face

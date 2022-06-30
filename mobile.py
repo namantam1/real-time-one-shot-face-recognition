@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+from datetime import datetime
 import cv2
 from functions import *
 from urllib import request
 
 
-REMOTE_URL = "http://192.168.137.155:8080/shot.jpg"
+REMOTE_URL = "http://192.168.137.19:8080/shot.jpg"
 
 
 class video_capture:
@@ -58,6 +59,7 @@ while True:
 			# if matches[best_match_index]:
 			if face_distances[best_match_index] <= threshold:
 				name = known_face_labels[best_match_index]
+				export_data.append((name, datetime.now()))
 			else:
 				name = "Unknown"
 
@@ -93,3 +95,4 @@ while True:
 # Release handle to the webcam
 video_capture.release()
 cv2.destroyAllWindows()
+save_export()

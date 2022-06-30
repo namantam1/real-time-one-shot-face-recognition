@@ -15,7 +15,7 @@ VIDEO_PATH = argv[1]
 from functions import *
 
 rotate = False
-skip_frames = 50 # i.e. at 30 fps, this advances one second
+skip_frames = 10 # i.e. at 30 fps, this advances one second
 
 video_capture = cv2.VideoCapture(VIDEO_PATH)
 # print(video_capture.set(cv2.CAP_PROP_FPS, 5))
@@ -37,7 +37,7 @@ while True:
 	current_frame_count = video_capture.get(cv2.CAP_PROP_POS_FRAMES)
 	# print(f"Processing frame {current_frame_count}...")
 
-	update_progress(current_frame_count*100/video_frames, "Processing video")
+	update_progress(current_frame_count*100/video_frames, f"Processing video {current_frame_count}")
 
 	# Grab a single frame of video
 	success, frame = video_capture.read()
@@ -49,7 +49,7 @@ while True:
 	if not success or current_frame_count >= video_frames:
 		break
 
-	times = 0.25
+	times = 0.9
 	# Resize frame of video to 1/4 size for faster face recognition processing
 	small_frame = cv2.resize(frame, (0, 0), fx=times, fy=times)
 	# small_frame = frame.copy()
